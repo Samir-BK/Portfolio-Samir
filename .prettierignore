@@ -1,0 +1,9 @@
+/references/
+/docs/reference-analysis.md
+/docs/architecture.md
+/docs/development-roadmap.md
+/.next/
+/out/
+/coverage/
+/pnpm-lock.yaml
+/next-env.d.ts
