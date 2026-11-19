@@ -6,9 +6,14 @@ const stylesheet = readFileSync(
   new URL('../src/app/globals.css', import.meta.url),
   'utf8',
 );
-const palettes = [
-  ...stylesheet.matchAll(/:root\s*\{([^{}]*--background:[^{}]*)\}/g),
+const pairs = [
+  ...stylesheet.matchAll(
+    /--([\w-]+): light-dark\(#([\da-f]{6}), #([\da-f]{6})\);/g,
+  ),
 ];
+const palettes = [2, 3].map((index) =>
+  Object.fromEntries(pairs.map((pair) => [pair[1], pair[index]])),
+);
 
 function luminance(color) {
   const channels = color.match(/../g).map((pair) => {
@@ -20,15 +25,7 @@ function luminance(color) {
 }
 
 test('both palettes meet text and control contrast targets', () => {
-  assert.equal(palettes.length, 2);
-
-  for (const [, palette] of palettes) {
-    const colors = Object.fromEntries(
-      [...palette.matchAll(/--([\w-]+): #([\da-f]{6});/g)].map(
-        ([, name, color]) => [name, color],
-      ),
-    );
-
+  for (const colors of palettes) {
     function check(foreground, background, minimum) {
       assert.ok(
         colors[foreground] && colors[background],
@@ -48,8 +45,10 @@ test('both palettes meet text and control contrast targets', () => {
     for (const surface of ['background', 'surface', 'surface-raised']) {
       check('text-primary', surface, 4.5);
       check('text-secondary', surface, 4.5);
+      check('accent-text', surface, 4.5);
       check('focus-ring', surface, 3);
       check('control-border', surface, 3);
+      check('accent', surface, 3);
     }
 
     check('accent-ink', 'accent', 4.5);

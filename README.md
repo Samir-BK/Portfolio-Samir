@@ -1,6 +1,6 @@
 # Portfolio
 
-Milestone 1 establishes the App Router shell, design tokens and a temporary verification page at `/`.
+Milestone 2 adds a single-page developer portfolio at `/` using clearly labeled sample content.
 
 ## Requirements and installation
 
@@ -29,11 +29,11 @@ Open http://localhost:3000. Use pnpm for dependency changes and commit only `pnp
 
 ## Structure and environment
 
-- `src/app/` contains the root layout and semantic CSS tokens. `src/app/(public)/` contains the temporary verification page.
-- `src/components/` contains shared presentation. Pages and components are Server Components by default. Add explicit client boundaries when browser state is needed.
+- `src/app/` contains the root layout and semantic CSS tokens. `src/app/(public)/` contains the homepage.
+- `src/components/` contains layout, homepage sections, and shared UI. `src/content/portfolio.ts` contains the sample profile, projects, and timeline. Pages and components are Server Components by default. Add explicit client boundaries when browser state is needed.
 - `tests/` contains the token contrast checks. `.github/workflows/ci.yml` defines CI.
 - `docs/` holds the reference analysis, architecture, and milestone plan. `references/` holds local reference snapshots and is ignored by Git and application tooling.
 
-This milestone requires no environment variables or external services. The light palette is selected by CSS when the system prefers light, so the initial paint needs no theme script. To verify it manually, use your browser's color-scheme and reduced-motion emulation and Tab through the skip link and sample links.
+This milestone requires no environment variables or external services. The theme defaults to your system preference. The header control can override it, and a small head script restores the saved choice before paint. To verify it manually, use your browser's color-scheme and reduced-motion emulation and Tab through the skip link and sample links.
 
 Future environment configuration should document variable names with nonsecret placeholders in `.env.example` and keep local secrets in `.env.local`. Use `NEXT_PUBLIC_` exclusively for values intended for browsers.

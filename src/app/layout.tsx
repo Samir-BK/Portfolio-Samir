@@ -1,23 +1,26 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { initializeTheme } from '@/lib/theme';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Portfolio Foundation',
-  description: 'A verification page for the portfolio design system.',
+  title: 'Developer Portfolio',
+  description:
+    'A software developer portfolio preview with sample projects and engineering interests.',
   robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: initializeTheme }} />
+      </head>
       <body>
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
-        <main id="main-content" className="page-container" tabIndex={-1}>
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   );
