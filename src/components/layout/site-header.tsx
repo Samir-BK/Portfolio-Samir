@@ -1,17 +1,21 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { sections, type SectionId } from '@/content/portfolio';
 import { Icon } from '@/components/ui/icon';
 import { ThemeSwitcher } from './theme-switcher';
 
-export function SiteHeader() {
+type SitePage = 'home' | 'projects' | 'blog' | 'other';
+
+export function SiteHeader({ page = 'home' }: { page?: SitePage }) {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
   const header = useRef<HTMLElement>(null);
   const mobileMenu = useRef<HTMLDetailsElement>(null);
   const menuTrigger = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (page !== 'home') return;
     const targets = sections.flatMap(({ id }) => {
       const element = document.getElementById(id);
       return element ? [{ id, element }] : [];
@@ -48,7 +52,7 @@ export function SiteHeader() {
       window.removeEventListener('resize', scheduleUpdate);
       if (frame !== undefined) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [page]);
 
   function closeMenu(restoreFocus: boolean) {
     if (!mobileMenu.current?.open) return;
@@ -67,33 +71,51 @@ export function SiteHeader() {
   }, []);
 
   function navigationLinks(mobile = false) {
-    return sections.map(({ id, label }) => (
-      <a
-        key={id}
-        href={`#${id}`}
-        aria-current={activeSection === id ? 'location' : undefined}
-        onClick={() => {
-          if (mobile) closeMenu(false);
-        }}
-      >
-        <span className="path-prefix" aria-hidden="true">
-          ~/
-        </span>
-        {label.toLowerCase()}
-      </a>
-    ));
+    return [...sections, { id: 'blog', label: 'Blog' }].map(({ id, label }) => {
+      const href =
+        id === 'blog'
+          ? '/blog'
+          : page === 'home'
+            ? `#${id}`
+            : id === 'projects'
+              ? '/projects'
+              : `/#${id}`;
+      const current = page === 'home' ? activeSection === id : page === id;
+      return (
+        <Link
+          key={id}
+          href={href}
+          prefetch={false}
+          aria-current={
+            current ? (page === 'home' ? 'location' : 'page') : undefined
+          }
+          onClick={() => {
+            if (mobile) closeMenu(false);
+          }}
+        >
+          <span className="path-prefix" aria-hidden="true">
+            ~/
+          </span>
+          {label.toLowerCase()}
+        </Link>
+      );
+    });
   }
 
   return (
     <header className="site-header" ref={header}>
       <div className="site-width header-inner">
-        <a className="brand" href="#home" aria-label="Portfolio home">
+        <Link
+          className="brand"
+          href={page === 'home' ? '#home' : '/'}
+          aria-label="Portfolio home"
+        >
           <span className="brand-symbol">
             <span aria-hidden="true">&gt;_</span>
           </span>
           <span>dev.workspace</span>
           <span className="status-dot" aria-hidden="true" />
-        </a>
+        </Link>
         <nav aria-label="Main navigation" className="desktop-nav">
           {navigationLinks()}
         </nav>
