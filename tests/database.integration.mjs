@@ -25,6 +25,8 @@ const siteOrigin = 'https://portfolio.example';
 const newSlug = 'integration-new';
 const project = projectFixtures[0];
 const post = postFixtures[0];
+const pgConcurrentQueryWarning =
+  /Calling client\.query\(\) when the client is already executing a query/;
 
 function testEnvironment() {
   assert.notEqual(process.env.NODE_ENV, 'production');
@@ -70,15 +72,21 @@ async function startApp(env) {
     ],
     {
       env: { ...env, NODE_ENV: 'production' },
-      stdio: ['ignore', 'ignore', 'inherit'],
+      stdio: ['ignore', 'ignore', 'pipe'],
     },
   );
+  let stderr = '';
+  child.stderr.setEncoding('utf8');
+  child.stderr.on('data', (chunk) => {
+    stderr += chunk;
+    process.stderr.write(chunk);
+  });
+  const closed = once(child, 'close');
   async function stop() {
     if (child.exitCode === null && child.signalCode === null && child.pid) {
-      const stopped = once(child, 'exit');
       child.kill();
-      await stopped;
     }
+    await closed;
   }
   const base = `http://127.0.0.1:${port}`;
   for (let attempt = 0; attempt < 60; attempt++) {
@@ -87,7 +95,7 @@ async function startApp(env) {
       const response = await fetch(base + '/robots.txt', {
         signal: AbortSignal.timeout(1_000),
       });
-      if (response.ok) return { base, stop };
+      if (response.ok) return { base, stop, stderr: () => stderr };
     } catch {
       await delay(250);
     }
@@ -120,6 +128,12 @@ test(
     const db = createDatabase(env.DATABASE_URL);
     let ownsFixtures = false;
     let app;
+    const warnings = [];
+    function recordWarning(warning) {
+      if (pgConcurrentQueryWarning.test(warning.message))
+        warnings.push(warning.message);
+    }
+    process.on('warning', recordWarning);
     // Only remove records owned by this suite. Leave the applied migration in place.
     t.after(async () => {
       try {
@@ -150,8 +164,14 @@ test(
             }),
           ]);
       } finally {
-        await db.$disconnect();
+        try {
+          await db.$disconnect();
+        } finally {
+          process.off('warning', recordWarning);
+        }
       }
+      assert.doesNotMatch(app?.stderr() ?? '', pgConcurrentQueryWarning);
+      assert.deepEqual(warnings, []);
     });
     assert.equal(
       await db.project.count(),
@@ -197,6 +217,10 @@ test(
     await t.test(
       'lists published content and applies query-string filters',
       async () => {
+        const home = await get('/');
+        assert.match(home, /Featured projects/);
+        assert.match(home, /Signal Desk/);
+        assert.doesNotMatch(home, /Private project fixture/);
         const gallery = await get('/projects');
         assert.match(gallery, /Signal Desk/);
         assert.match(gallery, /Field Notes/);
