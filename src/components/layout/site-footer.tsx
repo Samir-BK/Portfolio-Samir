@@ -1,17 +1,23 @@
+import Link from 'next/link';
 import { profile } from '@/content/portfolio';
 import { Icon } from '@/components/ui/icon';
 import { SocialLinks } from '@/components/ui/social-links';
 
-export function SiteFooter() {
+export function SiteFooter({ home = true }: { home?: boolean }) {
   return (
     <footer className="site-footer">
       <div className="site-width footer-inner">
-        <a className="back-to-top" href="#home">
+        <a className="back-to-top" href={home ? '#home' : '#main-content'}>
           Back to top <Icon name="up" />
         </a>
         <nav aria-label="Footer navigation">
-          <a href="#projects">Projects</a>
-          <a href="#contact">Contact</a>
+          <Link href="/projects" prefetch={false}>
+            Projects
+          </Link>
+          <Link href="/blog" prefetch={false}>
+            Blog
+          </Link>
+          <Link href={home ? '#contact' : '/#contact'}>Contact</Link>
           <a href={profile.resume} download>
             Résumé sample <Icon name="download" />
           </a>
