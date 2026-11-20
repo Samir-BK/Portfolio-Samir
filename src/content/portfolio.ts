@@ -36,49 +36,6 @@ export const profile = {
   ] satisfies readonly Social[],
 } as const;
 
-export type Project = {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  technologies: readonly string[];
-  visual: 'queue' | 'trace' | 'notes';
-  href: string;
-};
-
-export const projects: readonly Project[] = [
-  {
-    id: 'signal-desk',
-    title: 'Signal Desk',
-    category: 'Workflow',
-    description:
-      'A concept for sorting incoming support requests and making the next action clear.',
-    technologies: ['Next.js', 'TypeScript', 'PostgreSQL'],
-    visual: 'queue',
-    href: 'https://example.com/?project=signal-desk',
-  },
-  {
-    id: 'traceboard',
-    title: 'Traceboard',
-    category: 'Developer tooling',
-    description:
-      'A concept for exploring request traces and finding where a service call slows down.',
-    technologies: ['React', 'Node.js', 'OpenTelemetry'],
-    visual: 'trace',
-    href: 'https://example.com/?project=traceboard',
-  },
-  {
-    id: 'field-notes',
-    title: 'Field Notes',
-    category: 'Knowledge tools',
-    description:
-      'A concept for organizing technical notes with tags, Markdown, and quick search.',
-    technologies: ['TypeScript', 'Tailwind CSS', 'Markdown'],
-    visual: 'notes',
-    href: 'https://example.com/?project=field-notes',
-  },
-];
-
 type SkillGroup = { title: string; items: readonly string[] };
 
 export const skillGroups: readonly SkillGroup[] = [
