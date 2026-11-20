@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: RouteProps) {
   const post = await requirePost((await params).slug);
   return pageMetadata({
-    title: post.title,
+    title: post.isDemo ? `${post.title} (synthetic example)` : post.title,
     description: post.summary,
     path: `/blog/${post.slug}`,
     publishedAt: post.publishedAt,
@@ -23,7 +23,9 @@ export async function generateMetadata({ params }: RouteProps) {
 
 export default async function ArticlePage({ params }: RouteProps) {
   const post = await requirePost((await params).slug);
-  const related = await relatedPosts(post);
+  const related = post.isDemo
+    ? []
+    : (await relatedPosts(post)).filter((article) => !article.isDemo);
 
   return (
     <ContentPage area="blog">

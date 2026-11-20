@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import { profile } from '../content/portfolio.ts';
 import { httpUrl } from '../lib/urls.ts';
 
-export const siteName = 'Developer Portfolio';
+export const siteName = profile.name;
 
 export function siteConfiguration(origin = process.env.SITE_ORIGIN) {
   if (!origin) return { origin: 'http://localhost:3000', index: false };
@@ -28,7 +29,8 @@ export function pageMetadata(
   },
   site = siteConfiguration(),
 ): Metadata {
-  const displayTitle = title === siteName ? title : `${title} | ${siteName}`;
+  const displayTitle =
+    path === '/' || title === siteName ? title : `${title} | ${siteName}`;
   const canonical = new URL(path, site.origin).href;
   const openGraph = {
     title: displayTitle,

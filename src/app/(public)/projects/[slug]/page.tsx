@@ -17,7 +17,9 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: RouteProps) {
   const project = await requireProject((await params).slug);
   return pageMetadata({
-    title: project.title,
+    title: project.isDemo
+      ? `${project.title} (synthetic concept)`
+      : project.title,
     description: project.summary,
     path: `/projects/${project.slug}`,
   });
@@ -33,7 +35,7 @@ export default async function ProjectPage({ params }: RouteProps) {
     ['Technical decisions', project.decisions],
     ['Challenges and solutions', project.challenges],
     ['Results and lessons', project.lessons],
-  ];
+  ].filter(([, text]) => text.trim());
 
   return (
     <ContentPage area="projects">
@@ -72,8 +74,12 @@ export default async function ProjectPage({ params }: RouteProps) {
           </div>
         ) : (
           <figure className="case-visual">
-            <ProjectArtwork visual={project.visual} />
-            <figcaption>Illustrative interface concept</figcaption>
+            <ProjectArtwork project={project} />
+            <figcaption>
+              {project.isDemo
+                ? 'Illustrative interface concept'
+                : 'Project illustration'}
+            </figcaption>
           </figure>
         )}
         <div className="article-prose">

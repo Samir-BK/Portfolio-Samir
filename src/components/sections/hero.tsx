@@ -6,7 +6,7 @@ import { SocialLinks } from '@/components/ui/social-links';
 
 const exampleQuestions = [
   'What tools do you work with?',
-  'How did you build Signal Desk?',
+  'How does the Flappy Bird agent learn?',
   'What are you learning next?',
 ];
 
@@ -54,7 +54,7 @@ export function Hero() {
       <div className="hero-copy">
         <p className="availability-label">
           <span className="status-dot" aria-hidden="true" />
-          {profile.availability}
+          {profile.location}
         </p>
         <h1 id="hero-title">
           <span className="hero-greeting">

@@ -1,4 +1,6 @@
-import { pageMetadata, siteName } from '@/server/metadata';
+import { profile, profileDescription } from '@/content/portfolio';
+import { hasPublishedArticles } from '@/server/content';
+import { pageMetadata } from '@/server/metadata';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
 import { Contact } from '@/components/sections/contact';
@@ -9,16 +11,16 @@ import { About, Journey, Skills } from '@/components/sections/profile-sections';
 export const dynamic = 'force-dynamic';
 
 export const metadata = pageMetadata({
-  title: siteName,
-  description:
-    'A software developer portfolio preview with sample projects and engineering interests.',
+  title: `${profile.name} | ${profile.role}`,
+  description: profileDescription,
   path: '/',
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+  const showBlog = await hasPublishedArticles().catch(() => false);
   return (
     <>
-      <SiteHeader />
+      <SiteHeader showBlog={showBlog} />
       <main id="main-content" tabIndex={-1}>
         <Hero />
         <FeaturedProjects />
@@ -27,7 +29,7 @@ export default function HomePage() {
         <Journey />
         <Contact />
       </main>
-      <SiteFooter />
+      <SiteFooter showBlog={showBlog} />
     </>
   );
 }

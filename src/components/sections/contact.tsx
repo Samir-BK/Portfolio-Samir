@@ -16,7 +16,8 @@ export function Contact() {
         <div className="section-heading">
           <h2 id="contact-title">Get in touch</h2>
           <p>
-            The address is a sample, and social links open platform homepages.
+            For opportunities or collaboration, email me or reach out on
+            LinkedIn.
           </p>
         </div>
         <div className="contact-actions">

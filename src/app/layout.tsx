@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { profile, profileDescription } from '@/content/portfolio';
 import { initializeTheme } from '@/lib/theme';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Developer Portfolio',
-  description:
-    'A software developer portfolio preview with sample projects and engineering interests.',
+  title: profile.name,
+  description: profileDescription,
   robots: { index: false, follow: false },
 };
 

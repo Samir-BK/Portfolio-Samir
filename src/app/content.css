@@ -278,3 +278,15 @@
 .content-related {
   margin-top: var(--space-12);
 }
+
+.project-art-caption {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.project-art-caption span {
+  color: var(--text-secondary);
+  font-size: var(--type-caption);
+}

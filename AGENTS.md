@@ -1,9 +1,9 @@
 # Portfolio development
 
-- Use the architecture and acceptance gates in `docs/architecture.md` and `docs/development-roadmap.md`. Start each new milestone only with the owner's approval.
-- Keep a single Next.js App Router application. Use strict TypeScript, pnpm, and the committed pnpm lockfile. Keep app-wide styles and semantic tokens in `src/app/globals.css`.
-- Default to Server Components. Use explicit client boundaries for browser interaction. Keep future data access and provider credentials in server-only modules under `src/server/`.
-- Organize public pages under `src/app/(public)/`. Add admin routes, API handlers, and Prisma only in their approved milestones.
-- Milestone 1 is the shell, tokens, verification page, and quality tooling. The real homepage, navigation, portfolio content, database, auth, admin, and chat are later work.
+- Follow `docs/architecture.md` and `docs/development-roadmap.md`. Milestones 1–4 are complete. Start Milestone 5 personalization only with the owner's approval and approved content. The public AI assistant is planned for Milestone 7.
+- Keep the portfolio publicly accessible without sign-in. Authentication, registration, user accounts, sessions, OAuth, an admin dashboard, and admin audit logging are outside scope.
+- Keep one Next.js App Router application with strict TypeScript, pnpm, and the committed pnpm lockfile. Preserve the terminal-inspired design and semantic tokens in `src/app/globals.css`.
+- Default to Server Components and use explicit client boundaries for browser interaction. Keep public pages in `src/app/(public)/` and database access and provider credentials server-only under `src/server/`.
+- Maintain content through Codex, Git, and trusted local tools. Keep the existing PostgreSQL and Prisma setup. Use the publication helpers for database updates so draft edits leave the published snapshot intact. Keep demo seeding local.
 - Treat `references/` as read-only. Use original source and assets and check permissions before any reuse.
-- Run format, lint, type, test, and build checks before completing a milestone. Record which checks were actually run.
+- Run format, lint, type, test, and build checks before completing an implementation milestone. Record the checks actually run.

@@ -7,16 +7,14 @@ export function SocialLinks({ compact = false }: { compact?: boolean }) {
       className={
         compact ? 'social-links social-links--compact' : 'social-links'
       }
-      aria-label={
-        compact ? 'Contact links (placeholders)' : 'Social placeholders'
-      }
+      aria-label={compact ? 'Contact links' : 'Social profiles'}
     >
       {profile.socials.map(({ label, href, icon }) => (
         <li key={label}>
           <a
             href={href}
-            aria-label={`${label} homepage (placeholder)`}
-            title={`${label} (placeholder)`}
+            aria-label={`${profile.name} on ${label}`}
+            title={label}
           >
             <Icon name={icon} />
             {!compact && (
@@ -32,8 +30,8 @@ export function SocialLinks({ compact = false }: { compact?: boolean }) {
         <li>
           <a
             href={`mailto:${profile.email}`}
-            aria-label="Email (placeholder address)"
-            title="Email (placeholder)"
+            aria-label={`Email ${profile.name}`}
+            title="Email"
           >
             <Icon name="mail" />
           </a>

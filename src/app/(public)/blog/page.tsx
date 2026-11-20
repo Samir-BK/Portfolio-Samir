@@ -26,10 +26,12 @@ export default async function BlogPage({
   return (
     <ContentPage area="blog">
       <ContentHeading path="~/blog" title="Technical blog" summary={summary} />
-      <Filters
-        action="/blog"
-        fields={[{ name: 'tag', label: 'Tag', selected: tag, options: tags }]}
-      />
+      {(tags.length > 0 || tag) && (
+        <Filters
+          action="/blog"
+          fields={[{ name: 'tag', label: 'Tag', selected: tag, options: tags }]}
+        />
+      )}
       <section aria-labelledby="post-results">
         <h2 id="post-results" className="result-count">
           {posts.length} {posts.length === 1 ? 'article' : 'articles'}
@@ -40,8 +42,10 @@ export default async function BlogPage({
               <PostCard key={post.slug} post={post} />
             ))}
           </div>
-        ) : (
+        ) : tag ? (
           <EmptyResults href="/blog" message="No articles match this tag." />
+        ) : (
+          <p className="empty-results">No articles published yet.</p>
         )}
       </section>
     </ContentPage>

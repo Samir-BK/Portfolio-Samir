@@ -13,9 +13,6 @@ export default function NotFound() {
         <Link href="/projects" className="button button--primary">
           Project gallery
         </Link>
-        <Link href="/blog" className="button button--secondary">
-          Technical blog
-        </Link>
       </nav>
     </ContentPage>
   );

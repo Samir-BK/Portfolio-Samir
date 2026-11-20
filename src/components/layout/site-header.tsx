@@ -2,13 +2,19 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { sections, type SectionId } from '@/content/portfolio';
+import { profile, sections, type SectionId } from '@/content/portfolio';
 import { Icon } from '@/components/ui/icon';
 import { ThemeSwitcher } from './theme-switcher';
 
 type SitePage = 'home' | 'projects' | 'blog' | 'other';
 
-export function SiteHeader({ page = 'home' }: { page?: SitePage }) {
+export function SiteHeader({
+  page = 'home',
+  showBlog,
+}: {
+  page?: SitePage;
+  showBlog: boolean;
+}) {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
   const header = useRef<HTMLElement>(null);
   const mobileMenu = useRef<HTMLDetailsElement>(null);
@@ -71,7 +77,10 @@ export function SiteHeader({ page = 'home' }: { page?: SitePage }) {
   }, []);
 
   function navigationLinks(mobile = false) {
-    return [...sections, { id: 'blog', label: 'Blog' }].map(({ id, label }) => {
+    const links = showBlog
+      ? [...sections, { id: 'blog', label: 'Blog' }]
+      : sections;
+    return links.map(({ id, label }) => {
       const href =
         id === 'blog'
           ? '/blog'
@@ -108,12 +117,12 @@ export function SiteHeader({ page = 'home' }: { page?: SitePage }) {
         <Link
           className="brand"
           href={page === 'home' ? '#home' : '/'}
-          aria-label="Portfolio home"
+          aria-label={`${profile.name}, home`}
         >
           <span className="brand-symbol">
             <span aria-hidden="true">&gt;_</span>
           </span>
-          <span>dev.workspace</span>
+          <span>{profile.name}</span>
           <span className="status-dot" aria-hidden="true" />
         </Link>
         <nav aria-label="Main navigation" className="desktop-nav">

@@ -133,6 +133,19 @@ async function queryPosts(tx: Prisma.TransactionClient, tag?: string) {
   return rows.map(toPost);
 }
 
+export function hasPublishedArticles() {
+  return readDatabase(async (tx) => {
+    const article = await tx.postVersion.findFirst({
+      where: {
+        ...postVisibility,
+        post: { ...postVisibility.post, isDemo: false },
+      },
+      select: { id: true },
+    });
+    return Boolean(article);
+  });
+}
+
 export function listPosts(tag?: string) {
   return readDatabase((tx) => queryPosts(tx, tag));
 }

@@ -219,11 +219,23 @@ test(
       async () => {
         const home = await get('/');
         assert.match(home, /Featured projects/);
+        assert.match(
+          home,
+          /<title>Samir B K \| Software Developer \| AI\/ML Enthusiast<\/title>/,
+        );
+        assert.match(home, /href="https:\/\/github\.com\/Samir-BK"/);
+        assert.doesNotMatch(
+          home,
+          /resume-placeholder\.txt|hello@example\.invalid/,
+        );
         assert.match(home, /Signal Desk/);
+        assert.match(home, /Synthetic concept/);
+        assert.doesNotMatch(home, /href="\/blog"/);
         assert.doesNotMatch(home, /Private project fixture/);
         const gallery = await get('/projects');
         assert.match(gallery, /Signal Desk/);
         assert.match(gallery, /Field Notes/);
+        assert.doesNotMatch(gallery, /href="\/blog"/);
         assert.doesNotMatch(
           gallery,
           /Private project fixture|Draft technology/,
@@ -239,6 +251,8 @@ test(
         );
         const blog = await get('/blog');
         assert.match(blog, /Put gallery filters in the URL/);
+        assert.match(blog, /Synthetic example/);
+        assert.doesNotMatch(blog, /href="\/blog"/);
         assert.doesNotMatch(blog, /Private article fixture|Draft tag/);
         const filtered = await get('/blog?tag=observability');
         assert.match(filtered, /Make a trace waterfall readable/);
@@ -381,16 +395,20 @@ test(
         );
         await get(`/projects/${newSlug}`, 404);
         await get(`/blog/${newSlug}`, 404);
+        assert.doesNotMatch(await get('/'), /href="\/blog"/);
         await publishProject(db, newSlug, 1);
         await publishPost(db, newSlug, 1);
         assert.match(await get(`/projects/${newSlug}`), /New public project/);
         assert.match(await get(`/blog/${newSlug}`), /New public article/);
+        assert.match(await get('/'), /href="\/blog"/);
+        assert.match(await get('/projects'), /href="\/blog"/);
 
         await withdrawProject(db, newSlug, 'delete');
         await withdrawPost(db, newSlug, 'delete');
         await withdrawProject(db, project.slug, 'unpublish');
         await withdrawPost(db, post.slug, 'unpublish');
         await seedDemo(db);
+        assert.doesNotMatch(await get('/'), /href="\/blog"/);
         for (const [area, slug] of [
           ['projects', project.slug],
           ['blog', post.slug],

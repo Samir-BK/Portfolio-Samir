@@ -1,57 +1,35 @@
 # Technical architecture
 
-## Deployment and stack
+## Public site and deployment
 
-Use one Node.js deployment of **Next.js App Router** in strict **TypeScript**, with **Tailwind CSS** for styling and **Motion for React** for interaction and selective scroll reveals. Use managed **PostgreSQL** with **Prisma** and the **pgvector** extension. Confirm compatible supported versions, connection pooling, migration privileges and extension availability in staging before pinning them.
+The portfolio is publicly accessible. Visitors can browse the site without signing in or registering. The owner maintains content through Codex, Git, and trusted local tools. Accounts, OAuth, sessions, an admin dashboard, and admin audit logging are outside the project scope.
 
-| Area | Proposed implementation |
-| --- | --- |
-| Public site | Server Components render the home, about, project list, project detail and blog. Use client components for filters that need local interaction, the navigation drawer, motion and the chat panel. Encode project filters in the URL so results are shareable. Generate page metadata, canonical links and a published-only sitemap. |
-| Styling and motion | Use CSS variables for semantic colors, spacing and typography, and Tailwind for layout. Use Motion for one-time entrances and the drawer. Honor system reduced motion for nonessential transforms, smooth scrolling and video. Keep key text and navigation visible without client JavaScript. Use original optimized images and an optional user-initiated demo. |
-| Content reads | Server Components call a server-only Prisma data layer directly. Begin with request-time reads for publication-sensitive content. Add caching only after measuring and verifying publish/unpublish invalidation across routes, feeds and previews. |
-| Admin writes | Use Server Actions for same-origin editing and publication. Each action validates inputs, checks the active admin session, applies the transaction and revalidates any affected pages when caching is introduced. Use explicit allowlists for external URLs and Markdown without raw HTML by default. |
-| Chat and HTTP | Use a same-origin `POST /api/chat` Route Handler for validated, bounded requests and a streamed response with typed events. Use an embeddings provider and a hosted generation provider from server-only modules. OpenAI is a candidate pending budget and data-policy approval. Keep a fake provider for deterministic tests. |
-| Hosting | Prefer managed Node hosting and PostgreSQL in a region chosen with the owner. Start with approved media checked into the project or hosted on an approved media origin. Add object storage when browser uploads are needed. Keep a separate staging database and run production migrations as a release step with a separate credential. |
+Use one Node.js deployment of **Next.js App Router** in strict **TypeScript**, with **Tailwind CSS** and **Motion for React**. Retain the existing **PostgreSQL** database, **Prisma** client, models, and migrations.
 
-Indicative layout, to be created only after approval to implement
+| Area                 | Design                                                                                                                                                                                                                                                              |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Public routes        | Server Components render the homepage, project gallery, case studies, and technical blog. Project and blog filters use shareable URL query parameters. Page metadata, canonical URLs, and the sitemap reflect published content.                                    |
+| UI and accessibility | Keep the responsive terminal-inspired design, semantic CSS tokens, visible keyboard focus, accessible navigation, and reduced-motion support. Use Client Components where browser interaction requires them.                                                        |
+| Content reads        | Server Components call the server-only Prisma data layer. Lists, detail pages, metadata, and the sitemap apply the same published-only visibility rules. Keep publication-sensitive reads fresh. Verify publish and withdrawal behavior before introducing caching. |
+| Content maintenance  | Keep approved source material and reviewed content changes in Git. Apply database changes through trusted local or release tools using the existing publication helpers. Database credentials remain server-side.                                                   |
+| Hosting              | Prefer managed Node.js hosting and PostgreSQL. Use separate development, testing, staging, and production databases. Apply Prisma migrations as a release step. Keep approved media in the project or on an approved media origin.                                  |
 
-- `src/app/(public)/` holds public routes, with canonical case studies at `/projects/[slug]`.
-- `src/app/admin/` holds sign-in, dashboard, and content editors. `src/app/api/chat/` serves the public chat stream.
-- `src/components/` holds shared UI and client interaction. `src/server/` holds auth, content, retrieval and provider integrations.
-- `prisma/` holds schema and migrations. `tests/` holds deterministic fixtures plus integration and browser suites.
+Public routes live in `src/app/(public)/`. Shared UI lives in `src/components/`. The homepage profile lives in `src/content/portfolio.ts`. Database access and publication helpers live in `src/server/`. Prisma schema, migrations, and the development-only seed live in `prisma/`.
 
-Sources [Next.js Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components), [Tailwind Next.js guide](https://tailwindcss.com/docs/installation/framework-guides/nextjs), [MotionConfig](https://motion.dev/docs/react-motion-config), [Prisma with Next.js](https://www.prisma.io/docs/guides/frameworks/nextjs).
+## Content maintenance
 
-## Content and admin
+1. **Edit and review in Git.** Use Codex and local tools to update the homepage bio, skills, experience, education, résumé, and public contact links. Prepare approved project and article copy, slugs, and media in reviewable files. Commit material only after it is cleared for everyone who can access that repository.
+2. **Preview with a local database.** The running site reads projects and posts from PostgreSQL. Editing a fixture file or committing copy does not update those rows. A trusted local script can call the existing server-side draft and publication helpers in `src/server/publication.ts`. The current `db:seed` command inserts synthetic data for development.
+3. **Publish an approved snapshot.** Exercise the exact data change in staging before applying it in the intended environment. Save drafts with the expected version to catch conflicting edits. Publishing replaces the live snapshot atomically. Saving a draft leaves the live version intact. Unpublishing or soft deletion removes the content from subsequent public reads.
+4. **Verify or restore.** Check the listing, direct URL, metadata, and sitemap after publishing or withdrawing content. Git records the reviewed source changes. Restore a prior database snapshot by republishing verified earlier content or using the documented backup and restore process. Use `public/` only for approved assets because direct file URLs remain accessible until the files are removed from the deployment.
 
-| Record | Ownership and visibility |
-| --- | --- |
-| `Profile`, `Experience`, `Education` | Public biography and career details, stored as structured fields with an explicit published version. Skills can start as an approved list. |
-| `Project`, `Post`, `Tag` | Project and post drafts, slugs, summaries, Markdown and publication state. Include featured order for projects and a version for conflict detection. Separate draft edits from the published snapshot so saving a draft leaves the live page intact. |
-| `ContentChunk` | Derived searchable text, parent source ID, source version, chunk ordinal, embedding model, vector and content hash. Resolve canonical citation labels and URLs from the published source. |
-| `IndexJob` | Durable outbox for reindexing after publication, with deduplication, retry status and timestamps. |
-| `AdminIdentity`, `Session`, `AuditEvent` | Explicit authorized identities, revocable sessions and audit records for content mutations and relevant authentication events. Exclude credentials and session tokens from audit payloads. |
+## Future public AI assistant
 
-Use a maintained authentication integration and a managed OAuth/OIDC identity provider with MFA or passkeys. Default to one pre-provisioned owner identity, mapped to the provider's stable issuer and subject, with no public signup. Require an active, revocable session and current admin grant on every protected read and mutation. The auth library should manage callbacks and use short-lived, secure, HttpOnly cookies with a SameSite policy compatible with its login flow. Use framework/library CSRF defenses and same-origin protections for mutations. Test expiry, revocation, wrong-account sign-in and direct invocation of protected operations. If considering Auth.js, verify the current Prisma adapter and version compatibility before choosing a session adapter. [Next.js authentication guidance](https://nextjs.org/docs/app/guides/authentication), [Auth.js](https://authjs.dev/getting-started), [Prisma Auth.js guide](https://www.prisma.io/docs/guides/authentication/authjs/nextjs).
+The assistant is a later milestone and will answer questions using approved portfolio material. Its retrieval method and provider will be selected in that milestone after reviewing corpus size, privacy, and cost.
 
-Public pages, metadata and chat all apply a common visibility rule to the current published version. For an edit, use optimistic concurrency on the draft. Publish the reviewed version, write its audit event and enqueue an index job in one database transaction. Unpublishing updates the live visibility immediately for subsequent reads. Keep the data layer authoritative for every server entry point.
+- Retrieve from approved homepage facts and current published project and article versions. Check publication eligibility on every request, including when an index contains older content.
+- Ground answers in retrieved excerpts and cite verified public URLs. Give a clear fallback when evidence is insufficient. Keep provider credentials server-side and give the assistant read-only access to approved content.
+- Validate and bound requests, rate-limit public access, cap spending, and keep conversation context transient. Plan an independent way to disable the assistant and preserve normal browsing when the provider is unavailable.
+- Test source selection, unsupported questions, draft and withdrawn content exclusion, accessibility, and provider failure before public enablement.
 
-## Retrieval and chat
-
-1. **Index only approved public content.** Use published project case studies, profile sections, experience and posts. Chunk by meaningful headings and embed with a pinned model and vector dimension. Commit chunks only for the expected current published version. Key writes by source, version, model and chunk ordinal so retries stay idempotent. A scheduler polls database jobs, and a manual reindex path can repair failures. Remove superseded chunks after successful updates.
-2. **Retrieve from PostgreSQL.** Start with exact cosine ranking over the small corpus and tune the score threshold and context size on a fixed evaluation set. Prisma handles normal data access. Use a custom migration and parameterized SQL for pgvector. Join chunks back to current published source versions before scoring or returning hits so stale, unpublished and deleted content is ineligible even if indexing lags. Add lexical matching for names and acronyms only if evaluation shows a gap.
-3. **Ground answers in evidence.** Send only capped conversation context and the selected published excerpts to the generation provider. Treat visitor messages and excerpts as data. Supply no tools, admin endpoints or write access to the model. Use an allowlist of retrieved source IDs and resolve citation URLs on the server. If retrieval is weak or a citation is invalid, return a short fallback with project links. Stream verified units of text and citation IDs so the client never displays an unchecked URL.
-4. **Bound spend and retention.** Validate message count, length and request size. Use a shared rate limiter for multiple instances, a concurrency cap, per-request time and token limits, and a global spend guard. Abort work on cancellation when supported. Keep conversation history transient and log aggregate usage, latency and errors by default. Confirm provider retention and disclose what the chat sends before launch.
-5. **Handle failure openly.** A database, embedding or generation failure should leave the portfolio navigable and give the visitor a useful fallback. Track indexing lag, retrieval misses, provider failures and cost. A feature flag should allow chat to be disabled independently.
-
-Sources [Prisma PostgreSQL extensions](https://www.prisma.io/docs/postgres/database/postgres-extensions), [pgvector](https://github.com/pgvector/pgvector), [OpenAI API data controls](https://developers.openai.com/api/docs/guides/your-data).
-
-## Decisions to confirm
-
-- Which audience should the home page prioritize, and which two or three projects should anchor it?
-- Which résumé, experience, education, project material, blog excerpts and contact details are approved for public pages and chat?
-- Which owner identity provider and account should administer the site? Which hosting region and monthly budget fit the project?
-- Is sending visitor messages and selected public excerpts to a hosted model acceptable? What provider retention and spend limits are acceptable?
-- Is email contact sufficient for launch, or is a submission form required? Does the first admin release need browser uploads?
-
-Until these are decided, the proposal assumes a single owner, an email contact link, no visitor accounts, managed hosting and an optional, public-content-only chat. See the [reference audit](reference-analysis.md) and [roadmap](development-roadmap.md).
+See the [development roadmap](development-roadmap.md) and the [local setup and deployment instructions](../README.md).

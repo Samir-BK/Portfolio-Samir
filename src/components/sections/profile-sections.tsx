@@ -75,7 +75,7 @@ function Timeline({
       <ol className="timeline">
         {entries.map(({ period, title, description }) => (
           <li key={title}>
-            <p className="meta-label">{period}</p>
+            {period && <p className="meta-label">{period}</p>}
             <h4>{title}</h4>
             <p>{description}</p>
           </li>
@@ -96,7 +96,6 @@ export function Journey() {
       <Entrance>
         <div className="section-heading">
           <h2 id="journey-title">Experience and education</h2>
-          <p>Sample entries show the timeline format.</p>
         </div>
         <div className="timeline-grid">
           <Timeline title="Experience" entries={experience} />

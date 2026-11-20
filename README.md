@@ -1,6 +1,6 @@
 # Portfolio
 
-A terminal-inspired developer portfolio with a homepage, project case studies, and a technical blog. Projects and articles use clearly labeled synthetic content.
+A public, terminal-inspired developer portfolio with a homepage, project case studies, and a technical blog. Visitors can browse without signing in. The personalized project manifest is available for local review, and the development seed still provides labeled synthetic examples. A public AI assistant is planned for a later release. See the [roadmap](docs/development-roadmap.md).
 
 ## Requirements and installation
 
@@ -38,7 +38,7 @@ Open http://localhost:3000. The optional seed inserts labeled demo data and pres
 | `pnpm dev`          | Start the development server.                                           |
 | `pnpm lint`         | Run ESLint with warnings treated as errors.                             |
 | `pnpm typecheck`    | Generate Next.js route types and run strict TypeScript checking.        |
-| `pnpm test`         | Check contrast, publication, filtering, Markdown safety, and metadata.  |
+| `pnpm test`         | Check contrast, filter parsing, Markdown safety, and metadata.          |
 | `pnpm format`       | Format the project files with Prettier.                                 |
 | `pnpm format:check` | Check formatting without writing files.                                 |
 | `pnpm db:generate`  | Regenerate the typed Prisma client after a schema change.               |
@@ -61,6 +61,14 @@ The theme defaults to your system preference. The header control can override it
 Set `SITE_ORIGIN` in both the build and runtime environments. Canonical URLs, Open Graph URLs, and the sitemap use this value. Local builds use `http://localhost:3000` and tell crawlers to stay out. The gallery supports `technology` and `category` query parameters. The blog supports `tag`.
 
 The demo fixtures have an explicit publication flag and their own labels. Blog posts accept Markdown prose and fenced code. TypeScript, JavaScript, and JSON receive syntax highlighting. Embedded HTML is discarded, and Markdown images render as their alternative text.
+
+## Maintaining content locally
+
+See the [personalization review and local import](docs/personalization.md) for the verified project sources and commands to preview them in a dedicated database.
+
+- Edit the homepage profile, skills, experience, education, and contact links in `src/content/portfolio.ts`. Use only owner-approved copy and media. Review changes in Git and preview them locally.
+- Prepare project and article updates in reviewable source files. Use a trusted local script with the helpers in `src/server/publication.ts` to save a draft, publish it, or withdraw it. Verify the change against a local or staging database before applying it to production. Keep credentials outside Git.
+- Git tracks the reviewed content changes. The live project and blog routes read PostgreSQL, so their content changes when a database snapshot is published. The demo seed remains for local development. See the [content maintenance workflow](docs/architecture.md#content-maintenance).
 
 ## Database verification and deployment
 
