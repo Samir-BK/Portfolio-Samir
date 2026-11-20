@@ -1,9 +1,19 @@
+import { pageMetadata, siteName } from '@/server/metadata';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
 import { Contact } from '@/components/sections/contact';
 import { FeaturedProjects } from '@/components/sections/featured-projects';
 import { Hero } from '@/components/sections/hero';
 import { About, Journey, Skills } from '@/components/sections/profile-sections';
+
+export const dynamic = 'force-dynamic';
+
+export const metadata = pageMetadata({
+  title: siteName,
+  description:
+    'A software developer portfolio preview with sample projects and engineering interests.',
+  path: '/',
+});
 
 export default function HomePage() {
   return (
