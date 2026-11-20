@@ -1,5 +1,6 @@
 @import 'tailwindcss' source(none);
 @import './home.css' layer(components);
+@import './content.css' layer(components);
 @source './';
 @source '../components';
 
