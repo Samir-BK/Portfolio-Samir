@@ -112,11 +112,11 @@ main::before {
 }
 
 :is(.desktop-nav, .mobile-nav) a:hover,
-:is(.desktop-nav, .mobile-nav) a[aria-current='location'] {
+:is(.desktop-nav, .mobile-nav) a[aria-current] {
   color: var(--accent-text);
 }
 
-.desktop-nav a[aria-current='location']::after {
+.desktop-nav a[aria-current]::after {
   position: absolute;
   inset: auto 0 -0.55rem;
   height: 2px;
@@ -215,7 +215,7 @@ main::before {
   border-radius: var(--corner-control);
 }
 
-.mobile-nav a[aria-current='location'] {
+.mobile-nav a[aria-current] {
   background: var(--surface-raised);
 }
 
