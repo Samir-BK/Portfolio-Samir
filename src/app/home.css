@@ -945,3 +945,111 @@ main::before {
     align-items: center;
   }
 }
+
+.chat-toggle {
+  cursor: pointer;
+  list-style: none;
+}
+
+.chat-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.chat-toggle .chat-title {
+  flex: 1;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.chat-toggle::after {
+  content: '+';
+  align-self: center;
+}
+
+.chat-panel[open] .chat-toggle::after {
+  content: '−';
+}
+
+.chat-body,
+.chat-form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.chat-form label,
+.chat-actions,
+.chat-suggestions {
+  font-family: var(--type-mono);
+  font-size: var(--type-caption);
+}
+
+.chat-form textarea,
+.chat-suggestions button {
+  border: 1px solid var(--control-border);
+  border-radius: var(--corner-control);
+  background: var(--surface);
+  color: inherit;
+  padding: var(--space-2);
+}
+
+.chat-form textarea {
+  width: 100%;
+  min-width: 0;
+  resize: vertical;
+  font-size: 1rem;
+  scroll-margin-block: 4rem;
+}
+
+.chat-actions,
+.chat-suggestions,
+.chat-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chat-suggestions button {
+  text-align: start;
+  cursor: pointer;
+}
+
+.chat-sources a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
+
+.chat-actions button:disabled {
+  opacity: 0.65;
+}
+
+.chat-transcript {
+  max-height: min(34dvh, 16rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+  padding-inline-end: var(--space-2);
+}
+
+.chat-turn {
+  display: grid;
+  gap: var(--space-2);
+  margin-block: var(--space-2);
+}
+
+.chat-turn strong {
+  color: var(--accent-text);
+}
+
+.chat-answer {
+  white-space: pre-wrap;
+}
+
+.chat-error {
+  font-weight: 600;
+}
+
+.chat-toggle .chat-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
