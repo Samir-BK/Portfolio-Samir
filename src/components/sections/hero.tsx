@@ -1,3 +1,5 @@
+import { assistantMode } from '@/server/chat/config';
+import { PortfolioChat } from './portfolio-chat';
 import { profile } from '@/content/portfolio';
 import { ButtonLink } from '@/components/ui/button';
 import { Entrance } from '@/components/ui/entrance';
@@ -44,6 +46,7 @@ function AssistantPreview() {
 }
 
 export function Hero() {
+  const mode = assistantMode();
   return (
     <section
       className="site-width hero"
@@ -78,7 +81,11 @@ export function Hero() {
         <SocialLinks compact />
       </div>
       <Entrance hero className="hero-terminal">
-        <AssistantPreview />
+        {mode === 'disabled' ? (
+          <AssistantPreview />
+        ) : (
+          <PortfolioChat testMode={mode === 'fake'} />
+        )}
       </Entrance>
     </section>
   );
