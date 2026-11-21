@@ -128,3 +128,24 @@ model PostTag {
   @@id([postVersionId, key])
   @@index([key])
 }
+
+model AssistantProfilePublication {
+  id        String   @id
+  sections  Json
+  updatedAt DateTime @updatedAt
+}
+
+model AssistantUsageWindow {
+  key       String   @id
+  count     Int      @default(0)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model AssistantRequestLease {
+  id        String   @id
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
