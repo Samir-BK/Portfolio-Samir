@@ -1,6 +1,6 @@
 # Portfolio development
 
-- Follow `docs/architecture.md` and `docs/development-roadmap.md`. Milestones 1–4 are complete. Start Milestone 5 personalization only with the owner's approval and approved content. The public AI assistant is planned for Milestone 7.
+- Follow `docs/architecture.md` and `docs/development-roadmap.md`. Milestones 1–5 are complete. Milestone 6 covers the public assistant. Begin the Rahti deployment milestone only with the owner's approval.
 - Keep the portfolio publicly accessible without sign-in. Authentication, registration, user accounts, sessions, OAuth, an admin dashboard, and admin audit logging are outside scope.
 - Keep one Next.js App Router application with strict TypeScript, pnpm, and the committed pnpm lockfile. Preserve the terminal-inspired design and semantic tokens in `src/app/globals.css`.
 - Default to Server Components and use explicit client boundaries for browser interaction. Keep public pages in `src/app/(public)/` and database access and provider credentials server-only under `src/server/`.
