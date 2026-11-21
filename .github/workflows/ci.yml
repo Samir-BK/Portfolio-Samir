@@ -40,3 +40,6 @@ jobs:
       - run: pnpm test:db
         env:
           TEST_DATABASE_URL: postgresql://portfolio_test:disposable-ci@127.0.0.1:5432/portfolio_test
+      - run: pnpm test:chat
+        env:
+          TEST_DATABASE_URL: postgresql://portfolio_test:disposable-ci@127.0.0.1:5432/portfolio_test
