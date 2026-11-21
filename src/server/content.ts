@@ -5,12 +5,12 @@ import type { Prisma } from '../generated/prisma/client.ts';
 import { facetKey } from '../lib/content.ts';
 import { readDatabase } from './db.ts';
 
-const projectVisibility = {
+export const projectVisibility = {
   stage: 'PUBLISHED',
   project: { deletedAt: null },
 } satisfies Prisma.ProjectVersionWhereInput;
 
-const postVisibility = {
+export const postVisibility = {
   stage: 'PUBLISHED',
   post: { deletedAt: null },
 } satisfies Prisma.PostVersionWhereInput;
