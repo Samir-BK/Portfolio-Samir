@@ -1,6 +1,6 @@
 # Portfolio
 
-A public, terminal-inspired developer portfolio with a homepage, project case studies, and a technical blog. Visitors can browse without signing in. The personalized project manifest is available for local review, and the development seed still provides labeled synthetic examples. A public AI assistant is planned for a later release. See the [roadmap](docs/development-roadmap.md).
+A public, terminal-inspired developer portfolio with a homepage, project case studies, and a technical blog. Visitors can browse without signing in. The personalized project manifest is available for local review, and the development seed still provides labeled synthetic examples. The public AI assistant is disabled by default. See the [assistant setup and controls](docs/assistant.md) for local testing and provider configuration. See the [roadmap](docs/development-roadmap.md).
 
 ## Requirements and installation
 
@@ -33,20 +33,21 @@ Open http://localhost:3000. The optional seed inserts labeled demo data and pres
 
 ## Commands
 
-| Command             | Purpose                                                                 |
-| ------------------- | ----------------------------------------------------------------------- |
-| `pnpm dev`          | Start the development server.                                           |
-| `pnpm lint`         | Run ESLint with warnings treated as errors.                             |
-| `pnpm typecheck`    | Generate Next.js route types and run strict TypeScript checking.        |
-| `pnpm test`         | Check contrast, filter parsing, Markdown safety, and metadata.          |
-| `pnpm format`       | Format the project files with Prettier.                                 |
-| `pnpm format:check` | Check formatting without writing files.                                 |
-| `pnpm db:generate`  | Regenerate the typed Prisma client after a schema change.               |
-| `pnpm db:migrate`   | Apply committed migrations to the configured database.                  |
-| `pnpm db:seed`      | Insert demo data into the local development database.                   |
-| `pnpm test:db`      | Migrate and test an isolated database against the built production app. |
-| `pnpm build`        | Build for production.                                                   |
-| `pnpm start`        | Serve the production build locally.                                     |
+| Command             | Purpose                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| `pnpm dev`          | Start the development server.                                                       |
+| `pnpm lint`         | Run ESLint with warnings treated as errors.                                         |
+| `pnpm typecheck`    | Generate Next.js route types and run strict TypeScript checking.                    |
+| `pnpm test`         | Check contrast, filter parsing, Markdown safety, and metadata.                      |
+| `pnpm format`       | Format the project files with Prettier.                                             |
+| `pnpm format:check` | Check formatting without writing files.                                             |
+| `pnpm db:generate`  | Regenerate the typed Prisma client after a schema change.                           |
+| `pnpm db:migrate`   | Apply committed migrations to the configured database.                              |
+| `pnpm db:seed`      | Insert demo data into the local development database.                               |
+| `pnpm test:chat`    | Evaluate retrieval and the chat route with a fake provider and isolated PostgreSQL. |
+| `pnpm test:db`      | Migrate and test an isolated database against the built production app.             |
+| `pnpm build`        | Build for production.                                                               |
+| `pnpm start`        | Serve the production build locally.                                                 |
 
 ## Structure and environment
 
