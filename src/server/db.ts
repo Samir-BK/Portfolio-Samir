@@ -93,3 +93,9 @@ export async function readDatabase<T>(
     throw new Error('Portfolio content is temporarily unavailable.');
   }
 }
+
+export function writeDatabase<T>(
+  query: (tx: Prisma.TransactionClient) => Promise<T>,
+) {
+  return database().$transaction(query, { isolationLevel: 'ReadCommitted' });
+}
