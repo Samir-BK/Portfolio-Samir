@@ -23,13 +23,10 @@ Public routes live in `src/app/(public)/`. Shared UI lives in `src/components/`.
 3. **Publish an approved snapshot.** Exercise the exact data change in staging before applying it in the intended environment. Save drafts with the expected version to catch conflicting edits. Publishing replaces the live snapshot atomically. Saving a draft leaves the live version intact. Unpublishing or soft deletion removes the content from subsequent public reads.
 4. **Verify or restore.** Check the listing, direct URL, metadata, and sitemap after publishing or withdrawing content. Git records the reviewed source changes. Restore a prior database snapshot by republishing verified earlier content or using the documented backup and restore process. Use `public/` only for approved assets because direct file URLs remain accessible until the files are removed from the deployment.
 
-## Future public AI assistant
+## Public AI assistant
 
-The assistant is a later milestone and will answer questions using approved portfolio material. Its retrieval method and provider will be selected in that milestone after reviewing corpus size, privacy, and cost.
+The homepage terminal calls a same-origin Node.js route. The route ranks approved public PostgreSQL excerpts and asks Groq to produce concise claims with supporting excerpt IDs. The server validates the IDs, requests a grounding check, and streams the checked answer with allowlisted portfolio links. Draft and synthetic content are excluded. A published database snapshot of the public homepage makes approved profile sections available for retrieval.
 
-- Retrieve from approved homepage facts and current published project and article versions. Check publication eligibility on every request, including when an index contains older content.
-- Ground answers in retrieved excerpts and cite verified public URLs. Give a clear fallback when evidence is insufficient. Keep provider credentials server-side and give the assistant read-only access to approved content.
-- Validate and bound requests, rate-limit public access, cap spending, and keep conversation context transient. Plan an independent way to disable the assistant and preserve normal browsing when the provider is unavailable.
-- Test source selection, unsupported questions, draft and withdrawn content exclusion, accessibility, and provider failure before public enablement.
+The assistant shares rate limits, usage counters and concurrent request leases through PostgreSQL. It is disabled by default, and deterministic development and test modes use no provider credentials. See [assistant setup and limits](assistant.md) for configuration, data handling, evaluation, and the Rahti prerequisites.
 
 See the [development roadmap](development-roadmap.md) and the [local setup and deployment instructions](../README.md).
