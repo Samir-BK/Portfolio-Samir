@@ -22,11 +22,14 @@
     "db:migrate": "prisma migrate deploy",
     "db:seed": "node --env-file-if-exists=.env --conditions=react-server prisma/seed.ts",
     "test:db": "node --env-file-if-exists=.env --env-file-if-exists=.env.test --conditions=react-server --test tests/database.integration.mjs",
-    "db:personalize": "node --env-file-if-exists=.env.personalization --conditions=react-server prisma/personalize.ts"
+    "db:personalize": "node --env-file-if-exists=.env.personalization --conditions=react-server prisma/personalize.ts",
+    "db:chat-profile": "node --env-file-if-exists=.env --conditions=react-server prisma/chat-profile.ts",
+    "test:chat": "node --env-file-if-exists=.env --env-file-if-exists=.env.test --conditions=react-server --test tests/chat.integration.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
+    "groq-sdk": "1.6.0",
     "marked": "18.2.1",
     "motion": "14.14.0",
     "next": "16.4.6",
