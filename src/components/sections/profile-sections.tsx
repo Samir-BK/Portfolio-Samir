@@ -45,18 +45,18 @@ export function Skills() {
         <div className="section-heading">
           <h2 id="skills-title">Skills</h2>
         </div>
-        <div className="skill-grid">
-          {skillGroups.map(({ title, items }) => (
-            <div key={title} className="skill-group">
-              <h3>{title}</h3>
-              <ul className="badge-list">
-                {items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+      </Entrance>
+      <Entrance className="skill-grid" stagger>
+        {skillGroups.map(({ title, items }) => (
+          <div key={title} className="skill-group">
+            <h3>{title}</h3>
+            <ul className="badge-list">
+              {items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </Entrance>
     </section>
   );
@@ -97,10 +97,10 @@ export function Journey() {
         <div className="section-heading">
           <h2 id="journey-title">Experience and education</h2>
         </div>
-        <div className="timeline-grid">
-          <Timeline title="Experience" entries={experience} />
-          <Timeline title="Education" entries={education} />
-        </div>
+      </Entrance>
+      <Entrance className="timeline-grid" stagger>
+        <Timeline title="Experience" entries={experience} />
+        <Timeline title="Education" entries={education} />
       </Entrance>
     </section>
   );
