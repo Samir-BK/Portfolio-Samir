@@ -1,3 +1,4 @@
+import { Entrance } from '@/components/ui/entrance';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ContentHeading, ContentPage } from '@/components/content/content-page';
@@ -94,7 +95,7 @@ export default async function ProjectPage({ params }: RouteProps) {
       {related.length > 0 && (
         <section className="content-related" aria-labelledby="related-projects">
           <h2 id="related-projects">Related projects</h2>
-          <div className="project-grid">
+          <Entrance className="project-grid" stagger>
             {related.map((entry) => (
               <ProjectCard
                 key={entry.slug}
@@ -102,7 +103,7 @@ export default async function ProjectPage({ params }: RouteProps) {
                 showFeatured={false}
               />
             ))}
-          </div>
+          </Entrance>
         </section>
       )}
     </ContentPage>
