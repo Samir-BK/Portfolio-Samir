@@ -7,10 +7,12 @@ export function Entrance({
   children,
   className,
   hero = false,
+  stagger = false,
 }: {
   children: ReactNode;
   className?: string;
   hero?: boolean;
+  stagger?: boolean;
 }) {
   const [scope, animate] = useAnimate<HTMLDivElement>();
   const inView = useInView(scope, { once: true, amount: 0.12 });
@@ -26,17 +28,29 @@ export function Entrance({
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     )
       return;
-    const animation = animate(
-      element,
-      { y: [hero ? 12 : 8, 0], opacity: [0.88, 1] },
-      { duration: hero ? 0.65 : 0.32, ease: [0.2, 0.65, 0.3, 1] },
+    const targets = stagger ? Array.from(element.children) : [element];
+    function reset(target: Element) {
+      if (!(target instanceof HTMLElement)) return;
+      target.style.removeProperty('transform');
+      target.style.removeProperty('opacity');
+    }
+    const animations = targets.map((target, index) =>
+      animate(
+        target,
+        { y: [hero ? 12 : 18, 0], opacity: [hero ? 0.88 : 0.8, 1] },
+        {
+          duration: hero ? 0.65 : 0.5,
+          delay: Math.min(index * 0.045, 0.18),
+          ease: [0.2, 0.65, 0.3, 1],
+          onComplete: () => reset(target),
+        },
+      ),
     );
     return () => {
-      animation.stop();
-      element.style.removeProperty('transform');
-      element.style.removeProperty('opacity');
+      for (const animation of animations) animation.stop();
+      for (const target of targets) reset(target);
     };
-  }, [animate, hero, reduceMotion, scope, shouldAnimate]);
+  }, [animate, hero, reduceMotion, scope, shouldAnimate, stagger]);
 
   return (
     <div className={className} ref={scope}>
