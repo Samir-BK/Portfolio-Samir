@@ -22,23 +22,23 @@ export async function FeaturedProjects() {
         {projects === null && (
           <p>Featured projects are temporarily unavailable.</p>
         )}
-        <div className="project-grid">
-          {featured.map((project) => (
-            <ProjectCard
-              key={project.slug}
-              project={project}
-              showFeatured={false}
-            />
-          ))}
-        </div>
-        <Link
-          className="project-link gallery-link"
-          href="/projects"
-          prefetch={false}
-        >
-          View project gallery
-        </Link>
       </Entrance>
+      <Entrance className="project-grid" stagger>
+        {featured.map((project) => (
+          <ProjectCard
+            key={project.slug}
+            project={project}
+            showFeatured={false}
+          />
+        ))}
+      </Entrance>
+      <Link
+        className="project-link gallery-link"
+        href="/projects"
+        prefetch={false}
+      >
+        View project gallery
+      </Link>
     </section>
   );
 }
