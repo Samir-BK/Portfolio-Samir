@@ -6,13 +6,7 @@ import { Entrance } from '@/components/ui/entrance';
 import { Icon } from '@/components/ui/icon';
 import { SocialLinks } from '@/components/ui/social-links';
 
-const exampleQuestions = [
-  'What tools do you work with?',
-  'How does the Flappy Bird agent learn?',
-  'What are you learning next?',
-];
-
-function AssistantPreview() {
+function AssistantUnavailable() {
   return (
     <section className="terminal-panel" aria-labelledby="terminal-title">
       <div className="terminal-header">
@@ -23,23 +17,17 @@ function AssistantPreview() {
         <p className="terminal-status">Offline</p>
       </div>
       <div className="terminal-body">
-        <p className="terminal-label">Preview · AI assistant coming soon</p>
         <p className="terminal-intro">
-          Hi there. When this terminal is live, you’ll be able to ask about the
-          projects, tools, and trade-offs behind the work.
+          The AI assistant is currently unavailable. You can still explore my
+          projects and experience.
         </p>
-        <div className="terminal-examples">
-          <p className="terminal-caption">Example questions</p>
-          <ul className="terminal-questions" aria-label="Example questions">
-            {exampleQuestions.map((question) => (
-              <li key={question}>{question}</li>
-            ))}
-          </ul>
-        </div>
-        <p className="terminal-prompt">
-          <span aria-hidden="true">&gt;</span>
-          Input unavailable in preview
-        </p>
+        <ButtonLink
+          href="/projects"
+          variant="secondary"
+          className="justify-self-start"
+        >
+          Explore projects <Icon name="arrow" />
+        </ButtonLink>
       </div>
     </section>
   );
@@ -82,7 +70,7 @@ export function Hero() {
       </div>
       <Entrance hero className="hero-terminal">
         {mode === 'disabled' ? (
-          <AssistantPreview />
+          <AssistantUnavailable />
         ) : (
           <PortfolioChat testMode={mode === 'fake'} />
         )}
