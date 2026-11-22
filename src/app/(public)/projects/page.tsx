@@ -1,3 +1,4 @@
+import { Entrance } from '@/components/ui/entrance';
 import { readFacet, type QueryValue } from '@/lib/content';
 import { ContentHeading, ContentPage } from '@/components/content/content-page';
 import { EmptyResults, Filters } from '@/components/content/filters';
@@ -52,11 +53,11 @@ export default async function ProjectsPage({
           {projects.length} {projects.length === 1 ? 'project' : 'projects'}
         </h2>
         {projects.length ? (
-          <div className="project-grid">
+          <Entrance className="project-grid" stagger>
             {projects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
             ))}
-          </div>
+          </Entrance>
         ) : (
           <EmptyResults
             href="/projects"
