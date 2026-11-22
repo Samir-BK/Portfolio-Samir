@@ -25,7 +25,7 @@ export function SiteFooter({
               Blog
             </Link>
           )}
-          <Link href={home ? '#contact' : '/#contact'}>Contact</Link>
+          <a href={home ? '#contact' : '/#contact'}>Contact</a>
           {profile.resume && (
             <a href={profile.resume} download>
               Résumé <Icon name="download" />
