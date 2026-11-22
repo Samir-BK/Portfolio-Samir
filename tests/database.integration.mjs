@@ -50,6 +50,7 @@ function testEnvironment() {
     DATABASE_URL: url,
     DATABASE_MIGRATION_URL: url,
     SITE_ORIGIN: siteOrigin,
+    AI_CHAT_ENABLED: 'false',
   };
 }
 
@@ -213,6 +214,18 @@ test(
       );
       return response.text();
     }
+
+    await t.test('disabled assistant links to the public gallery', async () => {
+      const home = await get('/');
+      const panel = home.match(
+        /<section[^>]+aria-labelledby="terminal-title"[^>]*>.*?<\/section>/s,
+      )?.[0];
+      assert.ok(panel, 'The disabled assistant panel is rendered.');
+      assert.match(panel, /The AI assistant is currently unavailable\./);
+      assert.match(panel, /<a[^>]+href="\/projects"[^>]*>Explore projects/);
+      assert.doesNotMatch(panel, /coming soon|<textarea[\s>]/i);
+      assert.match(await get('/projects'), /<h1>Projects<\/h1>/);
+    });
 
     await t.test(
       'lists published content and applies query-string filters',
